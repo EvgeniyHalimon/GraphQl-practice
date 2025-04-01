@@ -1,7 +1,7 @@
-import { PrismaClient, User } from '@prisma/client';
+import { PrismaClient } from '@prisma/client';
 
 export function links(
-  parent: User,
+  parent: any,
   args: unknown,
   context: { prisma: PrismaClient },
 ) {

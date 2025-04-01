@@ -1,17 +1,17 @@
-import { PrismaClient, Vote, Link, User } from '@prisma/client';
+import { PrismaClient } from '@prisma/client';
 
 export function voteLink(
-  parent: Vote,
+  parent: any,
   args: unknown,
   context: { prisma: PrismaClient },
-): Promise<Link | null> {
+): Promise<any | null> {
   return context.prisma.vote.findUnique({ where: { id: parent.id } }).link();
 }
 
 export function voteUser(
-  parent: Vote,
+  parent: any,
   args: unknown,
   context: { prisma: PrismaClient },
-): Promise<User | null> {
+): Promise<any | null> {
   return context.prisma.vote.findUnique({ where: { id: parent.id } }).user();
 }

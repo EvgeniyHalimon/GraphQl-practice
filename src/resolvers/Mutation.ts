@@ -1,11 +1,11 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import { PrismaClient, User, Link, Vote } from '@prisma/client';
+import { PrismaClient } from '@prisma/client';
 import { APP_SECRET } from '../utils.js';
 
 interface AuthPayload {
   token: string;
-  user: User;
+  user: any;
 }
 
 interface SignupArgs {
@@ -84,7 +84,7 @@ export async function post(
   parent: unknown,
   args: PostArgs,
   context: Context,
-): Promise<Link> {
+): Promise<any> {
   if (!context.userId) {
     throw new Error('Not authenticated');
   }
@@ -106,7 +106,7 @@ export async function vote(
   parent: unknown,
   args: VoteArgs,
   context: Context,
-): Promise<Vote> {
+): Promise<any> {
   if (!context.userId) {
     throw new Error('Not authenticated');
   }

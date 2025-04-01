@@ -1,4 +1,4 @@
-import { PrismaClient, Link } from '@prisma/client';
+import { PrismaClient } from '@prisma/client';
 
 interface FeedArgs {
   filter?: string;
@@ -12,7 +12,7 @@ interface Context {
 }
 
 interface FeedResponse {
-  links: Link[];
+  links: any[];
   count: number;
 }
 
