@@ -1,4 +1,4 @@
-import { ApolloServer, PubSub } from 'apollo-server';
+import { ApolloServer } from 'apollo-server';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -8,8 +8,8 @@ import { feed } from './resolvers/Query.js';
 import { signup, login, post, vote } from './resolvers/Mutation.js';
 import { links } from './resolvers/User.js';
 import { postedBy, votes } from './resolvers/Link.js';
-import { newLink, newVote } from './resolvers/Subscription.js';
 import { voteLink, voteUser } from './resolvers/Vote.js';
+import { PubSub } from 'graphql-subscriptions';
 
 const prisma = new PrismaClient();
 const pubsub = new PubSub();
