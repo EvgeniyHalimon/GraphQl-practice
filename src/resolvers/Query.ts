@@ -1,4 +1,26 @@
-export async function feed(_, args, context) {
+import { PrismaClient, Link } from '@prisma/client';
+
+interface FeedArgs {
+  filter?: string;
+  skip?: number;
+  take?: number;
+  orderBy?: { [key: string]: 'asc' | 'desc' };
+}
+
+interface Context {
+  prisma: PrismaClient;
+}
+
+interface FeedResponse {
+  links: Link[];
+  count: number;
+}
+
+export async function feed(
+  _: unknown,
+  args: FeedArgs,
+  context: Context,
+): Promise<FeedResponse> {
   const where = args.filter
     ? {
         OR: [
