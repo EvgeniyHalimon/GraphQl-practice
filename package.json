@@ -5,9 +5,11 @@
   "main": "index.ts",
   "type": "module",
   "scripts": {
-    "dev": "tsc && nodemon dist/index.js",
-    "generate": "prisma generate",
-    "migrate": "prisma migrate dev --name init"
+    "dev": "nodemon --exec tsx src/index.ts",
+    "prisma:migrate": "prisma migrate dev",
+    "prisma:generate": "prisma generate",
+    "types:generate": "graphql-code-generator",
+    "seed": "tsx prisma/seed.ts"
   },
   "keywords": [],
   "author": "",
@@ -23,11 +25,14 @@
     "nodemon": "^3.1.9"
   },
   "devDependencies": {
+    "@graphql-codegen/cli": "^5.0.5",
+    "@graphql-codegen/typescript": "^4.1.6",
+    "@graphql-codegen/typescript-resolvers": "^4.5.0",
     "@types/bcrypt": "^5.0.2",
     "@types/node": "^22.13.16",
     "prettier": "^3.5.3",
     "prisma": "^6.5.0",
-    "ts-node": "^10.9.2",
+    "tsx": "^4.19.1",
     "typescript": "^5.8.2"
   }
 }
