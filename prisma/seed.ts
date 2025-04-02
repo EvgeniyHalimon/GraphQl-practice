@@ -1,65 +1,69 @@
 import { PrismaClient } from '@prisma/client';
+import bcrypt from 'bcrypt';
 
 const prisma = new PrismaClient();
 
-const seed = async () => {
-  console.log('Seeding database...');
-
-  // Drop all data
+async function main() {
+  // Clean database
   await prisma.post.deleteMany();
   await prisma.user.deleteMany();
 
+  console.log('Seeding database...');
+
   // Create users
-  const userA = await prisma.user.create({
+  const password = await bcrypt.hash('password123', 10);
+
+  const alice = await prisma.user.create({
     data: {
-      name: 'Alice',
-      email: 'alice@email.com',
-    },
-  });
-  const userB = await prisma.user.create({
-    data: {
-      name: 'Pete',
-      email: 'pete@email.com',
+      name: 'Alice Smith',
+      email: 'alice@example.com',
+      password,
     },
   });
 
-  // Create 5 posts
-  await prisma.post.createMany({
-    data: [
-      {
-        title: 'Post 1',
-        content: 'Content 1',
-        authorId: userA.id,
-      },
-      {
-        title: 'Post 2',
-        content: 'Content 2',
-        authorId: userA.id,
-      },
-      {
-        title: 'Post 3',
-        content: 'Content 3',
-        authorId: userA.id,
-      },
-      {
-        title: 'Post 4',
-        content: 'Content 4',
-        authorId: userB.id,
-      },
-      {
-        title: 'Post 5',
-        content: 'Content 5',
-        authorId: userB.id,
-      },
-    ],
+  const bob = await prisma.user.create({
+    data: {
+      name: 'Bob Johnson',
+      email: 'bob@example.com',
+      password,
+    },
   });
 
-  console.log('Database seeded!');
-};
+  // Create posts
+  await prisma.post.create({
+    data: {
+      title: 'First Post by Alice',
+      content:
+        'This is my first post! I am excited to share my thoughts with you all.',
+      authorId: alice.id,
+    },
+  });
 
-seed()
+  await prisma.post.create({
+    data: {
+      title: 'GraphQL is amazing',
+      content:
+        'I have been using GraphQL for a few weeks now and I am loving it!',
+      authorId: alice.id,
+    },
+  });
+
+  await prisma.post.create({
+    data: {
+      title: 'Hello from Bob',
+      content:
+        'Hey everyone, this is my introduction post. Looking forward to sharing more!',
+      authorId: bob.id,
+    },
+  });
+
+  console.log('Database has been seeded!');
+}
+
+main()
   .catch(e => {
-    throw e;
+    console.error(e);
+    process.exit(1);
   })
   .finally(async () => {
     await prisma.$disconnect();
