@@ -1,9 +1,6 @@
-import { ApolloServer } from 'apollo-server';
+import { ApolloServer, gql } from 'apollo-server';
 import { PrismaClient } from '@prisma/client';
 import { PubSub } from 'graphql-subscriptions';
-import path from 'path';
-import fs from 'fs';
-import { fileURLToPath } from 'url';
 import { getUserId } from './utils.js';
 import { postedBy, votes } from './resolvers/Link.js';
 import { signup, login, post, vote } from './resolvers/Mutation.js';
@@ -47,70 +44,70 @@ const resolvers = {
 const prisma = new PrismaClient();
 const pubsub = new PubSub();
 
-const typeDefs = `
-type Query {
-  info: String!
-  feed(filter: String, skip: Int, take: Int, orderBy: LinkOrderByInput): Feed!
-}
+const typeDefs = gql`
+  type Query {
+    info: String!
+    feed(filter: String, skip: Int, take: Int, orderBy: LinkOrderByInput): Feed!
+  }
 
-type Feed {
-  links: [Link!]!
-  count: Int!
-}
+  type Feed {
+    links: [Link!]!
+    count: Int!
+  }
 
-type Link {
-  id: ID!
-  description: String!
-  url: String!
-  postedBy: User
-  votes: [Vote!]!
-  createdAt: String!
-  updatedAt: String!
-}
+  type Link {
+    id: ID!
+    description: String!
+    url: String!
+    postedBy: User
+    votes: [Vote!]!
+    createdAt: String!
+    updatedAt: String!
+  }
 
-type Mutation {
-  post(url: String!, description: String!): Link!
-  signup(email: String!, password: String!, name: String!): AuthPayload
-  login(email: String!, password: String!): AuthPayload
-  vote(linkId: ID!): Vote
-}
+  type Mutation {
+    post(url: String!, description: String!): Link!
+    signup(email: String!, password: String!, name: String!): AuthPayload
+    login(email: String!, password: String!): AuthPayload
+    vote(linkId: ID!): Vote
+  }
 
-type AuthPayload {
-  token: String
-  user: User
-}
+  type AuthPayload {
+    token: String
+    user: User
+  }
 
-type User {
-  id: ID!
-  name: String!
-  email: String!
-  links: [Link!]!
-  votes: [Vote!]!
-  createdAt: String!
-  updatedAt: String!
-}
+  type User {
+    id: ID!
+    name: String!
+    email: String!
+    links: [Link!]!
+    votes: [Vote!]!
+    createdAt: String!
+    updatedAt: String!
+  }
 
-type Subscription {
-  newLink: Link
-  newVote: Vote
-}
+  type Subscription {
+    newLink: Link
+    newVote: Vote
+  }
 
-type Vote {
-  id: ID!
-  voteLink: Link!
-  voteUser: User!
-}
+  type Vote {
+    id: ID!
+    voteLink: Link!
+    voteUser: User!
+  }
 
-input LinkOrderByInput {
-  description: Sort
-  url: Sort
-  createdAt: Sort
-}
+  input LinkOrderByInput {
+    description: Sort
+    url: Sort
+    createdAt: Sort
+  }
 
-enum Sort {
-  asc
-  desc
-}
+  enum Sort {
+    asc
+    desc
+  }
 `;
 
 const server = new ApolloServer({
