@@ -8,11 +8,20 @@ export const resolvers: IResolvers = {
   Query: {
     post: (root, args, context) => {
       const { id } = args;
+
+      if (!context.userId) {
+        throw new Error('Not authenticated');
+      }
+
       return prisma.post.findUnique({
         where: { id },
       });
     },
-    posts: () => {
+    posts: (root, args, context) => {
+      if (!context.userId) {
+        throw new Error('Not authenticated');
+      }
+
       return prisma.post.findMany();
     },
     me: (root, args, context) => {
@@ -157,7 +166,11 @@ export const resolvers: IResolvers = {
     },
   },
   User: {
-    posts: root => {
+    posts: (root, args, context) => {
+      if (!context.userId) {
+        throw new Error('Not authenticated');
+      }
+
       return prisma.post.findMany({
         where: {
           authorId: root.id,
